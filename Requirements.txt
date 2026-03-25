@@ -1,0 +1,9 @@
+numpy
+pandas
+matplotlib
+seaborn
+nltk
+scikit-learn==1.7.2
+streamlit
+tinydb
+# python version 3.10.9

@@ -1,0 +1,77 @@
+# Virtual Environment
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Database
+users_db.json
+*.db
+*.sqlite
+*.sqlite3
+
+# Data (large files)
+Dataset/
+*.csv
+*.xlsx
+*.xls
+
+# Model Files
+ModelFiles/
+*.pkl
+*.joblib
+
+# Reports
+Reports/
+*.png
+*.jpg
+*.jpeg
+*.pdf
+
+# Environment variables
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+*.log
+.streamlit/

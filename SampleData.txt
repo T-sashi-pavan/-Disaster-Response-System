@@ -1,0 +1,33 @@
+Flood:
+
+Heavy rainfall has flooded several houses in the low lying areas, people are stranded and need immediate rescue
+
+Severe flooding has submerged homes, families are being evacuated and clean drinking water is urgently required.
+
+Earthquake + Rescue + Medical:
+
+A strong earthquake has collapsed several buildings, people are trapped under debris and need immediate medical assistance.
+modified model using better f1 score best is randomforest
+
+Storm + Weather Emergency:
+
+The cyclone brought heavy rain and strong winds, roads are blocked and emergency services cannot reach affected villages.
+
+Food & Supplies Shortage:
+
+Food supplies have run out in the affected area and people are requesting rice, water packets, and basic necessities.
+
+Landslide & Blocked Roads:
+
+A landslide after heavy rainfall has blocked the main highway and several vehicles are stranded on the road.
+
+Shelter Requirement:
+
+Thousands of families have lost their homes and are seeking temporary shelters and blankets.
+
+Child & Vulnerable Groups:
+
+Many children and elderly people are missing after the disaster and need urgent help from rescue teams.
+
+
+
