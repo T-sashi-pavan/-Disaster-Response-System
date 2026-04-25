@@ -6,4 +6,15 @@ nltk
 scikit-learn==1.7.2
 streamlit
 tinydb
+folium
+streamlit-folium
+gtts
+spacy
+fuzzywuzzy
+python-Levenshtein
+fastapi
+uvicorn
+requests
+pyttsx3
+feedparser
 # python version 3.10.9

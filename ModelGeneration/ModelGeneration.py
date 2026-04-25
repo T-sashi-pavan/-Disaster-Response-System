@@ -25,10 +25,12 @@ nltk.download(['punkt', 'wordnet'])
 
 
 def tokenize(text):
-    text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower())
+    # Remove punctuation and numbers, keep only letters
+    text = re.sub(r"[^a-zA-Z]", " ", text.lower())
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
-    return [lemmatizer.lemmatize(tok) for tok in tokens]
+    # Remove short words (length < 2) and lemmatize
+    return [lemmatizer.lemmatize(tok) for tok in tokens if len(tok) > 1]
 
 
 def load_data(msg_path, cat_path):
@@ -94,7 +96,7 @@ def train_model(name, clf, X_train, X_test, y_train, y_test):
         "macro_f1": f1_score(y_test, preds, average="macro")
     }
 
-    print(f"{name} → Micro-F1: {metrics['micro_f1']:.3f}")
+    print(f"{name} - Micro-F1: {metrics['micro_f1']:.3f}")
     return pipeline, metrics
 
 def save_graphs(results_df, out_dir):
@@ -120,12 +122,14 @@ def save_graphs(results_df, out_dir):
 
 
 def main():
-    BASE = r"C:\Users\DELL\PycharmProjects\DisasterResponse\.venv\New_DisasterResponseTweets_2026"
-    MESSAGES = os.path.join(BASE, "Dataset/disaster_messages.csv")
-    CATEGORIES = os.path.join(BASE, "Dataset/disaster_categories.csv")
-    MODEL_PATH = os.path.join(BASE, "ModelFiles/disaster_model.pkl")
+    # Use relative paths based on the file location
+    BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    MESSAGES = os.path.join(BASE, "Dataset", "disaster_messages.csv")
+    CATEGORIES = os.path.join(BASE, "Dataset", "disaster_categories.csv")
+    MODEL_PATH = os.path.join(BASE, "ModelFiles", "disaster_model.pkl")
     REPORT_DIR = os.path.join(BASE, "Reports")
 
+    print(f"Loading data from: {MESSAGES}")
     X, y = load_data(MESSAGES, CATEGORIES)
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
@@ -142,7 +146,7 @@ def main():
     y_test_valid = y_test[valid_labels]
 
     removed_labels = set(y.columns) - set(valid_labels)
-    print(f"⚠ Removed single-class labels: {removed_labels}")
+    print(f"Removed single-class labels: {removed_labels}")
 
     for name, clf in get_models().items():
         model, metrics = train_model(
