@@ -7,17 +7,36 @@ Handles: Detection, Type, Needs, Severity, Priority, Location, Actions, Auto-Res
 import re
 import os
 import tempfile
-import spacy
+import sys
+
+# Handle optional spacy import
+try:
+    import spacy
+    SPACY_AVAILABLE = True
+except ImportError:
+    SPACY_AVAILABLE = False
+    
 from fuzzywuzzy import process, fuzz
 
 
 class DisasterAnalyzer:
     def __init__(self):
         # Load Spacy for NER (Multiple location detection)
-        try:
-            self.nlp = spacy.load("en_core_web_sm")
-        except Exception:
-            self.nlp = None
+        self.nlp = None
+        if SPACY_AVAILABLE:
+            try:
+                self.nlp = spacy.load("en_core_web_sm")
+            except Exception as e:
+                # Model not found - try to download it
+                try:
+                    import subprocess
+                    subprocess.check_call([
+                        sys.executable, "-m", "spacy", "download", "en_core_web_sm",
+                        "--quiet"
+                    ])
+                    self.nlp = spacy.load("en_core_web_sm")
+                except Exception:
+                    self.nlp = None
 
         # ── Indian + World Cities (name → (lat, lng)) ─────────────────────────
     CITIES = {

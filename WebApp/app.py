@@ -5,6 +5,30 @@ import pandas as pd
 from datetime import datetime
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
+# ── Initialize Models (for Streamlit Cloud deployment) ────────────────────────
+@st.cache_resource
+def initialize_models():
+    """Initialize required models on app startup"""
+    try:
+        import subprocess
+        try:
+            import spacy
+            spacy.load("en_core_web_sm")
+        except OSError:
+            # Try to download if not present
+            try:
+                subprocess.check_call([
+                    sys.executable, "-m", "spacy", "download", "en_core_web_sm",
+                    "--quiet"
+                ])
+            except:
+                pass
+    except:
+        pass
+
+initialize_models()
+
 from Utils.disaster_analyzer import DisasterAnalyzer
 from Utils.reliefweb_api import ReliefWebAPI
 from Utils.disaster_analysis_engine import DisasterAnalysisEngine
