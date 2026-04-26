@@ -8,35 +8,37 @@ import re
 import os
 import tempfile
 import sys
-
-# Handle optional spacy import
-try:
-    import spacy
-    SPACY_AVAILABLE = True
-except ImportError:
-    SPACY_AVAILABLE = False
-    
 from fuzzywuzzy import process, fuzz
 
 
 class DisasterAnalyzer:
     def __init__(self):
-        # Load Spacy for NER (Multiple location detection)
+        # Load Spacy for NER (Multiple location detection) - lazy load
         self.nlp = None
-        if SPACY_AVAILABLE:
+        self._load_spacy()
+
+    def _load_spacy(self):
+        """Lazy load spacy model - handles all errors gracefully"""
+        try:
+            import spacy
             try:
                 self.nlp = spacy.load("en_core_web_sm")
-            except Exception as e:
+            except OSError:
                 # Model not found - try to download it
                 try:
                     import subprocess
                     subprocess.check_call([
-                        sys.executable, "-m", "spacy", "download", "en_core_web_sm",
-                        "--quiet"
-                    ])
+                        sys.executable, "-m", "spacy", "download", "en_core_web_sm"
+                    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                     self.nlp = spacy.load("en_core_web_sm")
                 except Exception:
-                    self.nlp = None
+                    pass
+        except ImportError:
+            # Spacy not installed - that's okay, will use fallback
+            pass
+        except Exception:
+            # Any other error - fail silently
+            pass
 
         # ── Indian + World Cities (name → (lat, lng)) ─────────────────────────
     CITIES = {
