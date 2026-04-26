@@ -3,7 +3,12 @@ Text-to-Speech Voice Output Module
 Reads prediction results aloud using pyttsx3
 """
 
-import pyttsx3
+try:
+    import pyttsx3
+    PYTTSX3_AVAILABLE = True
+except ImportError:
+    PYTTSX3_AVAILABLE = False
+
 import threading
 from typing import Optional
 
@@ -18,6 +23,13 @@ class VoiceOutput:
             rate: Speech rate (words per minute)
             volume: Volume level (0.0 to 1.0)
         """
+        self.available = False
+        self.engine = None
+        
+        if not PYTTSX3_AVAILABLE:
+            print("Warning: pyttsx3 not installed - voice output disabled")
+            return
+            
         try:
             self.engine = pyttsx3.init()
             self.engine.setProperty('rate', rate)
