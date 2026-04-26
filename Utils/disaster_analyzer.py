@@ -8,7 +8,44 @@ import re
 import os
 import tempfile
 import sys
-from fuzzywuzzy import process, fuzz
+
+# Try to import fuzzywuzzy - fallback if not available
+try:
+    from fuzzywuzzy import process, fuzz
+    FUZZYWUZZY_AVAILABLE = True
+except ImportError:
+    FUZZYWUZZY_AVAILABLE = False
+    # Provide simple fallback functions
+    def fuzz_ratio(s1, s2):
+        """Simple string similarity without fuzzywuzzy"""
+        if not s1 or not s2:
+            return 0
+        s1, s2 = str(s1).lower(), str(s2).lower()
+        matches = sum(c1 == c2 for c1, c2 in zip(s1, s2))
+        return int((matches / max(len(s1), len(s2))) * 100)
+    
+    class FuzzFallback:
+        @staticmethod
+        def ratio(s1, s2):
+            return fuzz_ratio(s1, s2)
+    
+    class ProcessFallback:
+        @staticmethod
+        def extractOne(query, choices):
+            """Simple fallback for fuzzy matching without fuzzywuzzy"""
+            if not choices:
+                return (None, 0)
+            best_match = None
+            best_score = 0
+            for choice in choices:
+                score = fuzz_ratio(query, str(choice))
+                if score > best_score:
+                    best_score = score
+                    best_match = choice
+            return (best_match, best_score)
+    
+    fuzz = FuzzFallback()
+    process = ProcessFallback()
 
 
 class DisasterAnalyzer:
